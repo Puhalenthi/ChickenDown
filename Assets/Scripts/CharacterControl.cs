@@ -36,7 +36,7 @@ public class CharacterControl : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.L))
             {
-                if (playerBow.bow.transform.rotation.z >= 0 && playerBow.bow.transform.rotation.z < 180)
+                if (playerBow.bow.transform.rotation.z >= -180 && playerBow.bow.transform.rotation.z < 180)
                 {
                     rotationDirection = -1;
                 }
