@@ -148,11 +148,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 317020421}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.8, y: -3.39, z: 9.96264}
+  m_LocalPosition: {x: 0.4039998, y: 0.013999939, z: 0}
   m_LocalScale: {x: 0.8, y: 0.027609376, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2107847542}
+  m_Father: {fileID: 2020145791}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &317020423
@@ -843,7 +843,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 0da69bdd6f4d5f14a8c544b5558f9bfc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1057,6 +1057,9 @@ MonoBehaviour:
   characterGO: {fileID: 1185179397}
   massBorder: {fileID: 649310210}
   bow: {fileID: 317020421}
+  pivot: {fileID: 2020145790}
+  arrowPrefab: {fileID: 6162713845890692456, guid: 683208558d7548f4b8835e830a0340a2, type: 3}
+  isHoldingL: 0
 --- !u!1 &1199573787
 GameObject:
   m_ObjectHideFlags: 0
@@ -1168,7 +1171,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 0da69bdd6f4d5f14a8c544b5558f9bfc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1254,7 +1257,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 0da69bdd6f4d5f14a8c544b5558f9bfc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1455,6 +1458,9 @@ MonoBehaviour:
   characterGO: {fileID: 0}
   massBorder: {fileID: 0}
   bow: {fileID: 0}
+  pivot: {fileID: 0}
+  arrowPrefab: {fileID: 0}
+  isHoldingL: 0
 --- !u!58 &1549082646
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -2066,7 +2072,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 0da69bdd6f4d5f14a8c544b5558f9bfc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2113,6 +2119,38 @@ Transform:
   m_Father: {fileID: 1587466542}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2020145790
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2020145791}
+  m_Layer: 0
+  m_Name: Pivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2020145791
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2020145790}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.204, y: -3.404, z: 9.96264}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 317020422}
+  m_Father: {fileID: 2107847542}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2107847541
 GameObject:
   m_ObjectHideFlags: 0
@@ -2143,7 +2181,7 @@ Transform:
   m_Children:
   - {fileID: 1185179400}
   - {fileID: 1549082644}
-  - {fileID: 317020422}
+  - {fileID: 2020145791}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

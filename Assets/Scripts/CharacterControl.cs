@@ -16,23 +16,28 @@ public class CharacterControl : MonoBehaviour
     public GameObject characterGO;
     public GameObject massBorder;
     public GameObject bow;
+    public GameObject pivot;
+    public GameObject arrowPrefab;
+    public bool isHoldingL = false;
     public PlayerController.Controller playerController;
     public Bow.PlayerBow playerBow;
+    public Arrow.PlayerArrow playerArrow;
 
     private int rotationDirection;
 
     void Start()
     {
         playerController = new PlayerController.Controller(characterRB, massBorder);
-        playerBow = new Bow.PlayerBow(characterGO, bow);
+        playerBow = new Bow.PlayerBow(characterGO, bow, pivot);
+        playerArrow = new Arrow.PlayerArrow(characterGO, bow, arrowPrefab);
     }
 
     // Update is called once per frame
     void Update()
-    {
+    {   
         if (Input.GetKey(KeyCode.L))
         {
-            bow.SetActive(true);
+            isHoldingL = true;
 
             if (Input.GetKeyDown(KeyCode.L))
             {
@@ -44,7 +49,6 @@ public class CharacterControl : MonoBehaviour
                 {
                     rotationDirection = 1;
                 }
-                Debug.Log("DONE");
             }
             if (Input.GetKey(KeyCode.A))
             {
@@ -59,7 +63,11 @@ public class CharacterControl : MonoBehaviour
         }
         else
         {
-            bow.SetActive(false);
+            if (isHoldingL)
+            {
+                isHoldingL= false;
+                playerArrow.Launch(12, 12);
+            }
 
             if (Input.GetKeyDown(KeyCode.W))
             {
@@ -86,5 +94,6 @@ public class CharacterControl : MonoBehaviour
         }
         //if (Input.GetButton(KeyCode.))
         playerBow.updatePos();
+        bow.SetActive(isHoldingL);
     }
 }

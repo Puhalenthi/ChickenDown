@@ -9,10 +9,12 @@ public class Bow : MonoBehaviour
     {
         public GameObject bow;
         public GameObject player;
-        public PlayerBow(GameObject p, GameObject go)
+        public GameObject pivot;
+        public PlayerBow(GameObject p, GameObject go, GameObject piv)
         {
             player = p;
             bow = go;
+            pivot = piv;
         }
 
         public void rotateBow(int val, int dir)
@@ -22,7 +24,8 @@ public class Bow : MonoBehaviour
 
         public void updatePos()
         {
-            bow.transform.position = player.transform.position;
+            //bow.transform.position = player.transform.position;
+            pivot.transform.position = player.transform.position;
         }
     }
 
