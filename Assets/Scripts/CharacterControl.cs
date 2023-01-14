@@ -19,6 +19,8 @@ public class CharacterControl : MonoBehaviour
     public PlayerController.Controller playerController;
     public Bow.PlayerBow playerBow;
 
+    private int rotationDirection;
+
     void Start()
     {
         playerController = new PlayerController.Controller(characterRB, massBorder);
@@ -28,19 +30,31 @@ public class CharacterControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (Input.GetKey(KeyCode.L))
         {
             bow.SetActive(true);
+
+            if (Input.GetKeyDown(KeyCode.L))
+            {
+                if (playerBow.bow.transform.rotation.z >= 0 && playerBow.bow.transform.rotation.z < 180)
+                {
+                    rotationDirection = -1;
+                }
+                else
+                {
+                    rotationDirection = 1;
+                }
+                Debug.Log("DONE");
+            }
             if (Input.GetKey(KeyCode.A))
             {
-                playerBow.rotateBow(-1);
-                Debug.Log("rotating LEFT");
+                playerBow.rotateBow(-1, rotationDirection);
+                //Debug.Log("rotating LEFT");
             }
             else if (Input.GetKey(KeyCode.D))
             {
-                playerBow.rotateBow(1);
-                Debug.Log("rotating RIGHT");
+                playerBow.rotateBow(1, rotationDirection);
+                //Debug.Log("rotating RIGHT");
             }
         }
         else

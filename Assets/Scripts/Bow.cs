@@ -15,9 +15,9 @@ public class Bow : MonoBehaviour
             bow = go;
         }
 
-        public void rotateBow(int val)
+        public void rotateBow(int val, int dir)
         {
-            bow.transform.RotateAround(player.transform.position, new Vector3(0, 0, val), 50 * Time.deltaTime);
+            bow.transform.RotateAround(player.transform.position, new Vector3(0, 0, dir * val), 100 * Time.deltaTime);
         }
 
         public void updatePos()
