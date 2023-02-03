@@ -31,15 +31,5 @@ public class PlayerController : MonoBehaviour
         {
             player.AddForce(Vector2.right * moveForce, ForceMode2D.Force);
         }
-        public void increaseMass()
-        {
-            player.mass = 3;
-            massBorder.SetActive(true);
-        }
-        public void decreaseMass()
-        {
-            player.mass = 1;
-            massBorder.SetActive(false);
-        }
     }
 }

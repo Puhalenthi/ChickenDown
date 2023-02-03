@@ -2,13 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
-using UnityEditor.Callbacks;
 using UnityEngine.Diagnostics;
-using JetBrains.Annotations;
+using Unity.Netcode;
 
-public class CharacterControl : MonoBehaviour
+public class CharacterControl : NetworkBehaviour
 {
     // Start is called before the first frame update
 
@@ -17,29 +14,36 @@ public class CharacterControl : MonoBehaviour
     public GameObject massBorder;
     public GameObject bow;
     public GameObject pivot;
+    public GameObject center;
     public GameObject arrowPrefab;
     public bool isHoldingL = false;
     public PlayerController.Controller playerController;
     public Bow.PlayerBow playerBow;
     public Arrow.PlayerArrow playerArrow;
+    public SpriteRenderer _renderer;
 
     private int rotationDirection;
 
     void Start()
     {
+        bow.SetActive(isHoldingL);
+        if (!IsOwner) return;
         playerController = new PlayerController.Controller(characterRB, massBorder);
-        playerBow = new Bow.PlayerBow(characterGO, bow, pivot);
+        playerBow = new Bow.PlayerBow(center, bow, pivot);
         playerArrow = new Arrow.PlayerArrow(characterGO, bow, arrowPrefab);
     }
 
     // Update is called once per frame
     void Update()
-    {   
-        if (Input.GetKey(KeyCode.L))
+    {
+        if (!IsOwner) return;
+
+        playerBow.updatePos();
+        if (Input.GetKey(KeyCode.L) || Input.GetKey(KeyCode.Space))
         {
             isHoldingL = true;
 
-            if (Input.GetKeyDown(KeyCode.L))
+            if (Input.GetKeyDown(KeyCode.L) || Input.GetKey(KeyCode.Space))
             {
                 if (playerBow.bow.transform.rotation.z >= -180 && playerBow.bow.transform.rotation.z < 180)
                 {
@@ -75,25 +79,17 @@ public class CharacterControl : MonoBehaviour
             }
             else if (Input.GetKey(KeyCode.A))
             {
+                transform.localRotation = Quaternion.Euler(0, 180, 0);
                 playerController.moveLeft();
             }
             else if (Input.GetKey(KeyCode.D))
             {
+                transform.localRotation = Quaternion.Euler(0, 0, 0);
                 playerController.moveRight();
             }
         }
 
-
-        if (Input.GetKey(KeyCode.Space))
-        {
-            playerController.increaseMass();
-        }
-        else
-        {
-            playerController.decreaseMass();
-        }
         //if (Input.GetButton(KeyCode.))
-        playerBow.updatePos();
         bow.SetActive(isHoldingL);
     }
 }
