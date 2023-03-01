@@ -19,7 +19,7 @@ public class Bow : MonoBehaviour
 
         public void rotateBow(int val, int dir)
         {
-            bow.transform.RotateAround(player.transform.position, new Vector3(0, 0, dir * val), 100 * Time.deltaTime);
+            bow.transform.RotateAround(player.transform.position, new Vector3(0, 0, dir * val), 300 * Time.deltaTime);
         }
 
         public void updatePos()

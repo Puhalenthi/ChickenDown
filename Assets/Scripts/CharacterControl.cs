@@ -16,21 +16,20 @@ public class CharacterControl : NetworkBehaviour
     public GameObject pivot;
     public GameObject center;
     public GameObject arrowPrefab;
-    public bool isHoldingL = false;
+    public bool isHoldingL = true;
     public PlayerController.Controller playerController;
     public Bow.PlayerBow playerBow;
     public Arrow.PlayerArrow playerArrow;
     public SpriteRenderer _renderer;
+    Vector3 moveDirection;
 
     private int rotationDirection;
 
     void Start()
     {
-        bow.SetActive(isHoldingL);
         if (!IsOwner) return;
         playerController = new PlayerController.Controller(characterRB, massBorder);
         playerBow = new Bow.PlayerBow(center, bow, pivot);
-        playerArrow = new Arrow.PlayerArrow(characterGO, bow, arrowPrefab);
     }
 
     // Update is called once per frame
@@ -39,57 +38,49 @@ public class CharacterControl : NetworkBehaviour
         if (!IsOwner) return;
 
         playerBow.updatePos();
-        if (Input.GetKey(KeyCode.L) || Input.GetKey(KeyCode.Space))
-        {
-            isHoldingL = true;
 
-            if (Input.GetKeyDown(KeyCode.L) || Input.GetKey(KeyCode.Space))
-            {
-                if (playerBow.bow.transform.rotation.z >= -180 && playerBow.bow.transform.rotation.z < 180)
-                {
-                    rotationDirection = -1;
-                }
-                else
-                {
-                    rotationDirection = 1;
-                }
-            }
-            if (Input.GetKey(KeyCode.A))
-            {
-                playerBow.rotateBow(-1, rotationDirection);
-                //Debug.Log("rotating LEFT");
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                playerBow.rotateBow(1, rotationDirection);
-                //Debug.Log("rotating RIGHT");
-            }
+        if (playerBow.bow.transform.rotation.z >= -180 && playerBow.bow.transform.rotation.z < 180)
+        {
+            rotationDirection = -1;
         }
         else
         {
-            if (isHoldingL)
-            {
-                isHoldingL= false;
-                playerArrow.Launch(12, 12);
-            }
-
-            if (Input.GetKeyDown(KeyCode.W))
-            {
-                playerController.moveUp();
-            }
-            else if (Input.GetKey(KeyCode.A))
-            {
-                transform.localRotation = Quaternion.Euler(0, 180, 0);
-                playerController.moveLeft();
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                transform.localRotation = Quaternion.Euler(0, 0, 0);
-                playerController.moveRight();
-            }
+            rotationDirection = 1;
         }
 
-        //if (Input.GetButton(KeyCode.))
-        bow.SetActive(isHoldingL);
+        if (Input.GetKey(KeyCode.Q))
+        {
+            playerBow.rotateBow(-1, rotationDirection);
+            //Debug.Log("rotating LEFT");
+        }
+        else if (Input.GetKey(KeyCode.E))
+        {
+            playerBow.rotateBow(1, rotationDirection);
+            //Debug.Log("rotating RIGHT");
+        }
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            playerController.moveUp();
+        }
+        else if (Input.GetKey(KeyCode.A))
+        {
+            transform.localRotation = Quaternion.Euler(0, 180, 0);
+            playerController.moveLeft();
+        }
+        else if (Input.GetKey(KeyCode.D))
+        {
+            transform.localRotation = Quaternion.Euler(0, 0, 0);
+            playerController.moveRight();
+        }
+    }
+
+    void OnTriggerEnter(Collider attack)
+    {
+        if (attack.gameObject.tag == "Player")
+        {
+            moveDirection = characterRB.transform.position - attack.transform.position;
+            playerController.Knockback(moveDirection);
+        }
     }
 }

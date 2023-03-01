@@ -31,5 +31,9 @@ public class PlayerController : MonoBehaviour
         {
             player.AddForce(Vector2.right * moveForce, ForceMode2D.Force);
         }
+        public void Knockback(Vector3 moveDirection)
+        {
+            player.AddForce(moveDirection.normalized * -500f);
+        }
     }
 }
