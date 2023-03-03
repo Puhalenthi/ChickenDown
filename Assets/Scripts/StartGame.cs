@@ -17,6 +17,7 @@ public class StartGame : MonoBehaviour
 {
     public TextMeshProUGUI ip;
     public TextMeshProUGUI port;
+    public TextMeshProUGUI pName;
     public string lest;
     public float p;
     public int pr;
