@@ -25,7 +25,6 @@ public class PlayerName : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Display the playerName above the player in the game by using the player's position. It should be 10 units above the player
-        playerName.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 1, player.transform.position.z);
+        playerName.transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 0.5f, player.transform.position.z);
     }
 }
