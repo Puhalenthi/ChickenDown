@@ -80,7 +80,7 @@ public class CharacterControl : NetworkBehaviour
         if (attack.gameObject.tag == "Player")
         {
             moveDirection = characterRB.transform.position - attack.transform.position;
-            playerController.Knockback(moveDirection);
+            playerController.Knockback(moveDirection, attack);
         }
     }
 }

@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ public class PlayerController : MonoBehaviour
         public bool isOnGround = true;
         private float jumpForce = 10;
         private float moveForce = 2;
+        public float knockbackStrength = 50.0f;
         public Rigidbody2D player;
         public GameObject massBorder;
 
@@ -31,9 +33,11 @@ public class PlayerController : MonoBehaviour
         {
             player.AddForce(Vector2.right * moveForce, ForceMode2D.Force);
         }
-        public void Knockback(Vector3 moveDirection)
+        public void Knockback(Vector3 moveDirection, Collider collision)
         {
-            player.AddForce(moveDirection.normalized * -500f);
+            Rigidbody enemyRigidbody = collision.gameObject.GetComponent<Rigidbody>();
+            Vector2 awayFromPlayer = (collision.gameObject.transform.position - player.transform.position);
+            enemyRigidbody.AddForce(awayFromPlayer * knockbackStrength, ForceMode.Impulse);
         }
     }
 }
