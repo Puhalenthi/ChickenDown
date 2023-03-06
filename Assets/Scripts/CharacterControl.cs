@@ -45,7 +45,7 @@ public class CharacterControl : NetworkBehaviour
         if (IsLocalPlayer)
         {
             los = losses.Value / 2;
-            networkPlayerName.Value = "Player" + (OwnerClientId + 1) + ": " + losses.Value.ToString();
+            networkPlayerName.Value = "Player" + (OwnerClientId + 1) + ": " + los.ToString();
             playerName.text = networkPlayerName.Value.ToString();
             NameClientRpc();
 
