@@ -2,57 +2,60 @@ import socket
 import threading
 import tkinter as tk
 
+class ChatClient:
+    def __init__(self, host, port, username):
+        self.host = host
+        self.port = port
+        self.username = username
+        self.socket = None
 
-class ClientGUI:
-    def __init__(self):
-        self.root = tk.Tk()
-        self.root.title('Chatroom Client')
-        self.username_label = tk.Label(self.root, text='Username:')
-        self.username_label.pack()
-        self.username_entry = tk.Entry(self.root)
-        self.username_entry.pack()
-        self.port_label = tk.Label(self.root, text='Server Port:')
-        self.port_label.pack()
-        self.port_entry = tk.Entry(self.root)
-        self.port_entry.pack()
-        self.connect_button = tk.Button(self.root, text='Connect', command=self.connect)
-        self.connect_button.pack()
-        self.message_label = tk.Label(self.root, text='Message:')
-        self.message_label.pack()
-        self.message_entry = tk.Entry(self.root)
-        self.message_entry.pack()
-        self.send_button = tk.Button(self.root, text='Send', command=self.send_message)
-        self.send_button.pack()
-        self.chatlog_label = tk.Label(self.root, text='Chat Log:')
-        self.chatlog_label.pack()
-        self.chatlog_text = tk.Text(self.root)
-        self.chatlog_text.pack()
-        self.client = None
+        self.window = tk.Tk()
+        self.window.title(f"Chatroom ({self.username})")
+
+        self.message_frame = tk.Frame(self.window)
+        self.scrollbar = tk.Scrollbar(self.message_frame)
+        self.message_list = tk.Listbox(self.message_frame, height=15, width=50, yscrollcommand=self.scrollbar.set)
+        self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.message_list.pack(side=tk.LEFT, fill=tk.BOTH)
+        self.message_frame.pack()
+
+        self.message_input = tk.Entry(self.window)
+        self.message_input.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.message_input.bind("<Return>", self.send_message)
+
+        self.send_button = tk.Button(self.window, text="Send", command=self.send_message)
+        self.send_button.pack(side=tk.RIGHT)
 
     def connect(self):
-        username = self.username_entry.get()
-        port = int(self.port_entry.get())
-        self.client = ClientGUI('localhost', port, username, self.receive_message)
-        self.client.start()
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.connect((self.host, self.port))
+        self.socket.send(self.username.encode())
 
-    def send_message(self):
-        username = self.username_entry.get()
-        message = self.message_entry.get()
-        if self.client:
-            self.client.send_message(message)
-        self.message_entry.delete(0, tk.END)
-        self.display_message(f'{username}: {message}')
+        threading.Thread(target=self.receive_messages).start()
 
-    def receive_message(self, message):
-        self.display_message(message)
+    def receive_messages(self):
+        while True:
+            message = self.socket.recv(1024).decode().strip()
+            if not message:
+                break
 
-    def display_message(self, message):
-        self.chatlog_text.config(state=tk.NORMAL)
-        self.chatlog_text.insert(tk.END, message + '\n')
-        self.chatlog_text.config(state=tk.DISABLED)
-        self.chatlog_text.see(tk.END)
+            self.message_list.insert(tk.END, message)
+
+    def send_message(self, event=None):
+        message = self.message_input.get()
+        if message:
+            self.socket.send(message.encode())
+            self.message_input.delete(0, tk.END)
+
+    def run(self):
+        self.window.mainloop()
 
 
-if __name__ == '__main__':
-    client_gui = ClientGUI()
-    client_gui.root.mainloop()
+if __name__ == "__main__":
+    host = input("Enter server IP address: ")
+    port = int(input("Enter server port: "))
+    username = input("Enter username: ")
+
+    client = ChatClient(host, port, username)
+    client.connect()
+    client.run()

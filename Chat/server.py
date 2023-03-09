@@ -1,55 +1,42 @@
 import socket
 import threading
-import tkinter as tk
 
-
-class Server:
-    def __init__(self, port):
+class ChatServer:
+    def __init__(self, host, port):
+        self.host = host
         self.port = port
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.bind(('localhost', self.port))
-        self.clients = []
-        self.running = False
-        self.thread = threading.Thread(target=self.listen)
+        self.server_socket = None
+        self.clients = {}
 
     def start(self):
-        self.running = True
-        self.thread.start()
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_socket.bind((self.host, self.port))
+        self.server_socket.listen(5)
+        print(f"Server started on port {self.port}.")
 
-    def stop(self):
-        self.running = False
-        self.thread.join()
+        while True:
+            client_socket, address = self.server_socket.accept()
+            threading.Thread(target=self.handle_client, args=(client_socket, address)).start()
 
-    def listen(self):
-        self.sock.listen()
-        while self.running:
-            client_sock, _ = self.sock.accept()
-            self.clients.append(client_sock)
-            print(f'New client connected from {client_sock.getpeername()}')
+    def handle_client(self, client_socket, address):
+        username = client_socket.recv(1024).decode().strip()
+        self.clients[username] = client_socket
 
-    def send_message(self, message):
-        for client in self.clients:
-            client.sendall(message.encode())
+        print(f"Client {username} connected from {address}.")
 
+        while True:
+            message = client_socket.recv(1024).decode().strip()
+            if not message:
+                break
 
-class ServerGUI:
-    def __init__(self):
-        self.root = tk.Tk()
-        self.root.title('Chatroom Server')
-        self.port_label = tk.Label(self.root, text='Port:')
-        self.port_label.pack()
-        self.port_entry = tk.Entry(self.root)
-        self.port_entry.pack()
-        self.start_button = tk.Button(self.root, text='Start Server', command=self.start_server)
-        self.start_button.pack()
-        self.server = None
+            print(f"{username}: {message}")
+            for client in self.clients.values():
+                client.send(f"{username}: {message}".encode())
 
-    def start_server(self):
-        port = int(self.port_entry.get())
-        self.server = Server(port)
-        self.server.start()
+        del self.clients[username]
+        client_socket.close()
 
 
-if __name__ == '__main__':
-    server_gui = ServerGUI()
-    server_gui.root.mainloop()
+if __name__ == "__main__":
+    server = ChatServer("", 1234)
+    server.start()
